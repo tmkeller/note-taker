@@ -26,7 +26,12 @@ app.get( '/api/notes', ( req, res ) => {
 app.post( '/api/notes', function( req, res ) {
 
     fs.readFile( __dirname + "/db/db.json", "utf8", function( err, data ) {
-        let notes = JSON.parse( data );
+        let notes;
+        if ( !data ) {
+            notes = [];
+        } else {
+            notes = JSON.parse( data );
+        }
         let newObj = req.body;
         if ( !newObj.id ) {
             if ( notes.length > 0 ) {

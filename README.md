@@ -25,7 +25,7 @@ A web app built using Express.js that permits CRUD operations on custom notes, s
 Clone the git repo into your home directory, navigate there, then type npm i to install all dependencies.
 
 ## Usage
-Type node start.js or npm start to run application.
+Type node start.js or npm start to run application. Note Taker Express App is configured to run on port 8080 of your localhost, or you can view the live version at https://tmkeller-note-taker.herokuapp.com/ as of this writing.
 
 ## Contributing
 Fork this repository at https://github.com/tmkeller/note-taker
