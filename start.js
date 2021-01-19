@@ -7,7 +7,7 @@ app.use( express.urlencoded( { extended: true } ));
 app.use( express.json() );
 
 app.use( express.static( 'public' ));
-
+// Main functional page for the app.
 app.get( '/notes', (req, res) => {
     fs.readFile( __dirname + "/public/notes.html", function( err, data ) {
         if ( err ) throw err;
@@ -22,19 +22,22 @@ app.get( '/api/notes', ( req, res ) => {
         res.end( data );
     })
 })
-// // TODO: Append a new note with a unique ID to the end of the JSON file.
-// app.post( '/api/notes', function( req, res ) {
-//     console.log( "Post request" );
-//     console.log( req.body );
-//     fs.readFile( __dirname + "/db/db.json", "utf8", function( err, data ) {
-//         let notes = JSON.parse( data );
-//         notes = JSON.stringify( notes );
-//         fs.writeFile( __dirname + "/db/db.json", notes, function() {
-//             if ( err ) throw err;
-//         })
-//     })
-//     res.end();
-// });
+// Append a new note with a unique ID to the end of the JSON file.
+app.post( '/api/notes', function( req, res ) {
+    console.log( "Post request" );
+    console.log( req.body );
+    fs.readFile( __dirname + "/db/db.json", "utf8", function( err, data ) {
+        let notes = JSON.parse( data );
+        let newObj = req.body;
+        newObj.id = parseInt( notes[ notes.length - 1 ].id ) + 1 ;
+        notes.push( newObj );
+        stringified = JSON.stringify( notes );
+        fs.writeFile( __dirname + "/db/db.json", stringified, function() {
+            if ( err ) throw err;
+        })
+    })
+    res.end();
+});
 // Reads the JSON file, deletes the chosen ID, then writes the modified file back.
 app.delete( '/api/notes/:id', function( req, res ) {
     let toDelete = req.params.id;
