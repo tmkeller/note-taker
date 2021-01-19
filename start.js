@@ -24,13 +24,25 @@ app.get( '/api/notes', ( req, res ) => {
 })
 // Append a new note with a unique ID to the end of the JSON file.
 app.post( '/api/notes', function( req, res ) {
-    console.log( "Post request" );
-    console.log( req.body );
+
     fs.readFile( __dirname + "/db/db.json", "utf8", function( err, data ) {
         let notes = JSON.parse( data );
         let newObj = req.body;
-        newObj.id = parseInt( notes[ notes.length - 1 ].id ) + 1 ;
-        notes.push( newObj );
+        if ( !newObj.id ) {
+            if ( notes.length > 0 ) {
+                newObj.id = parseInt( notes[ notes.length - 1 ].id ) + 1;
+            } else {
+                newObj.id = 1;
+            }
+            notes.push( newObj );
+        } else {
+            newObj.id = parseInt( newObj.id );
+            for ( let i = 0; i < notes.length; i++ ) {
+                if ( notes[ i ].id == newObj.id ) {
+                    notes[ i ] = newObj;
+                }
+            }
+        }
         stringified = JSON.stringify( notes );
         fs.writeFile( __dirname + "/db/db.json", stringified, function() {
             if ( err ) throw err;
